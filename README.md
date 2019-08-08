@@ -11,5 +11,5 @@ used https://github.com/jfilter/split-folders to split the data into train/test/
 
 - [X] Split data into train/test/validation sets.
 - [X] Create CNN architecture.
-- [] Train and test hyperparameters. 
-- [] Become a pokemon master.
+- [ ] Train and test hyperparameters. 
+- [ ] Become a pokemon master.
