@@ -6,10 +6,15 @@ import torch.nn.functional as F
 import torchvision
 from torchvision import datasets, models, transforms
 from PIL import Image, ImageFile
+import split_folders
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 data_dir = 'data'
+
+def split_train_test_val(data_dir):
+  print('splitting out data folders')
+  split_folders.ratio(data_dir, output='output', seed=1337, ratio=(.8,.1,.1))
 
 #determine whether cuda is available
 use_cuda = torch.cuda.is_available()
@@ -20,11 +25,11 @@ n_epochs = 50
 
 
 
-def data_split(data_dir):
+def make_data_loaders(data_dir):
   batch_size = 10
   num_workers = 0
 
-  transforms = {
+  data_transforms = {
       'train' : transforms.Compose([
           transforms.RandomResizedCrop(224),
           transforms.RandomHorizontalFlip(0.2),
@@ -43,7 +48,7 @@ def data_split(data_dir):
           transforms.Normalize(mean=[0.5, 0.5, 0.5],std=[0.5, 0.5, 0.5])])
   }
 
-  img_datas = {x: datasets.ImageFolder(os.path.join(data_dir, x), transforms[x]) for x in ['train', 'test', 'valid']}
+  img_datas = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in ['train', 'test', 'valid']}
 
   loaders = {x: torch.utils.data.DataLoader(img_datas[x], batch_size=batch_size, num_workers=num_workers, shuffle=True) for x in ['train', 'valid', 'test']}
   return loaders
